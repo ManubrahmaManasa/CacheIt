@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cacheit.data.Repository
 import com.example.cacheit.databinding.ActivityMainBinding
 import com.example.cacheit.presentation.MyAdapter
 import com.example.cacheit.presentation.MyViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var adapter: MyAdapter
 
-    private val viewModel:MyViewModel by viewModels()
+    private val viewModel: MyViewModel by viewModels { MyViewModelFactory(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,11 +37,19 @@ class MainActivity : AppCompatActivity() {
             adapter.updateData(items)
         }*/
 
+
         viewModel.fetchPosts()
+
+        lifecycleScope.launch {
+            viewModel.data.observe(this@MainActivity) {items ->
+                adapter.updateData(items)
+            }
+        }
+        /*viewModel.fetchPosts()
 
         viewModel.data.observe(this){items->
             adapter.updateData(items)
-        }
+        }*/
 
 
 

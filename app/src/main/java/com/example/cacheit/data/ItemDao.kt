@@ -12,7 +12,7 @@ import androidx.room.Update
 interface ItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: Item)
+    suspend fun insert(item: List<Item>)
 
     @Update
     suspend fun update(item: Item)
@@ -21,5 +21,9 @@ interface ItemDao {
     suspend fun delete(item: Item)
 
     @Query("SELECT * FROM items_table ORDER BY id DESC")
-    suspend fun getAllItems():LiveData<List<Item>>
+    suspend fun getAllItems():List<Item>
+
+    @Query("SELECT COUNT(*) FROM items_table")
+    suspend fun getItemCount(): Int
+
 }
