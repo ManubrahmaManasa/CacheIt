@@ -7,21 +7,20 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
+import com.example.cacheit.domain.Item
 
 @Dao
 interface ItemDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: List<Item>)
-
-    @Update
-    suspend fun update(item: Item)
-
+    @Upsert
+    suspend fun insert(item: ItemEntity)
+    
     @Delete
-    suspend fun delete(item: Item)
+    suspend fun delete(item: ItemEntity)
 
     @Query("SELECT * FROM items_table ORDER BY id DESC")
-    suspend fun getAllItems():List<Item>
+    suspend fun getAllItems():List<ItemEntity>
 
     @Query("SELECT COUNT(*) FROM items_table")
     suspend fun getItemCount(): Int
